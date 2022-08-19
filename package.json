@@ -1,0 +1,31 @@
+{
+  "name": "hexo-generator-rstdoc",
+  "version": "0.0.1",
+  "description": "rstdoc generator for Hexo.",
+  "main": "index",
+  "scripts": {
+    "eslint": "eslint .",
+    "test": "mocha test/index.js",
+    "test-cov": "nyc npm run test"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "keywords": [
+    "hexo",
+    "generator",
+    "rstdoc"
+  ],
+  "author": "polarboy",
+  "license": "MIT",
+  "dependencies": {
+    "hexo-pagination": "1.0.0"
+  },
+  "engines": {
+    "node": ">=8.6.0"
+  }
+}
