@@ -46,17 +46,56 @@ if (generateDocs) {
         let config = hexo.config.docs_generator;
         let basePath = config.publish_dir;
         let pages = hexo.sphinxData.pages;
-        console.log(hexo.sphinxData.pages);
+        let navMap = generate_line_navlist(hexo.sphinxData.categoryTree);
         return _.values(pages).map(function(page){
            return {
               path: basePath+"/"+page.filename.replace('xml', 'html'),
               layout: ["docs/content"],
               data: {
                  layout: "doccontent",
-                 file: file,
-                 files: files
+                 body: page.body,
+                 title: page.pageTitle,
+                 catalog: hexo.sphinxData.categoryTree,
+                 navMap: navMap
               }
            };
         });
      });
+}
+
+// 生成手册线性导航数据
+function generate_line_navlist(categoryTree) {
+   var map = {};
+   var items = [];
+   for (let i = 0; i < categoryTree.length; ++i) {
+      let item = categoryTree[i];
+      if (!_.isArray(item)) {
+         items.push(item);
+      }
+   }
+   for (let i = 0; i < items.length; ++i) {
+      let item = items[i];
+      map[item.refuri] = nav = {};
+      if (i == 0) {
+         nav.next = {
+            text: items[i + 1].text,
+            url: items[i + 1].url,
+         }
+      } else if (i == items.length - 1) {
+         nav.prev = {
+            text: items[i - 1].text,
+            url: items[i - 1].url,
+         }
+      } else {
+         nav.prev = {
+            text: items[i - 1].text,
+            url: items[i - 1].url,
+         }
+         nav.next = {
+            text: items[i + 1].text,
+            url: items[i + 1].url,
+         }
+      }
+   }
+   return map;
 }
