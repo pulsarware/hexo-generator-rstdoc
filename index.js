@@ -55,12 +55,33 @@ if (generateDocs) {
                  layout: "doccontent",
                  body: page.body,
                  title: page.pageTitle,
-                 catalog: hexo.sphinxData.categoryTree,
-                 navMap: navMap
+                 catalog: process_category_tree(hexo.sphinxData.categoryTree),
+                 navMap: navMap,
+                 
               }
            };
         });
      });
+}
+
+function process_category_tree(rawCategoryTree)
+{
+    let category = [];
+    let i = 0;
+    while (i < rawCategoryTree.length) {
+        let item = rawCategoryTree[i];
+        let nextItem = rawCategoryTree[i + 1];
+        if (!nextItem || !_.isArray(nextItem)) {
+            category.push(_.cloneDeep(item));
+            i += 1;
+        } else if (_.isArray(nextItem)){
+            let itemCopy = _.cloneDeep(item);
+            itemCopy.children = process_category_tree(nextItem);
+            category.push(itemCopy);
+            i += 2;
+        }
+    }
+    return category;
 }
 
 // 生成手册线性导航数据
